@@ -86,3 +86,52 @@ The code given is structured as follows. Feel free however to modify the structu
 * [Sqlite3](https://sqlite.org/index.html) - Database storage engine
 
 Happy hacking 😁!
+
+---
+
+## Antaeus - Dogukan's Journey
+
+### Thought process
+
+ It seems like an easy task, but actually there are lots of decisions to make when it comes to implementation. Normally, 
+we need to **gather requirements** from stakeholders here, and then define the expected properties from this service. But since this is an abstract task, 
+I will make some assumptions for the properties of the service. 
+
+#### Assumptions
+- Application security is out of this context, this will be a service that'll be called internally with no public API. But still I would 
+secure this in a production environment since payments are involved.
+- Invoice table can grow quickly if customer base grows fast, so We should be ready to scale
+- We should be extremely careful about fault tolerance since charges involved.
+
+ Considering these items, we need to focus on two properties for the service; scalability and reliability. Let's focus on them ⬇️
+
+### Scalability
+
+- Service should be able to scale horizontally when needed, so payment of the invoices should be done in parallel. Also invoice payments are not something that
+should be done synchronously, user is not expecting a response, it's a batch process. We should go for asynchronous messaging.
+- If we have a message broker, we can have multiple consumers that'll make the payments in parallel.
+
+### Reliability
+
+- Service should be reactive to pre-defined exceptions and unexpected errors. By using a message broker, messages with unexpected errors can be replayed or end up in DLQ
+for further investigation. 
+
+Asynchronous messaging creates two sub problems. We need a balance between producing and consuming messages so there is no bottleneck. Most of the time message production
+is way faster than consumption. So one leader instance that produces the messages can be enough. If producing messages become a bottleneck in the future, database 
+pagination can be introduced for multiple service instances.
+
+So let's decide how we can move forward in actual implementation;
+
+- We'll need a lightweight message broker and add it to our Docker setup. I normally use SNS/SQS from AWS, but for the sake of this project, RabbitMQ is ready
+to handle more than we need.
+- We need to have a scheduler setup and a leadership election system, in order to not have competing schedulers. 
+I need to look for a scheduler library that supports distributed environment for Kotlin, maybe.
+>Edit: Found this one -> https://github.com/justwrote/kjob - Lightweight and Supports multiple instances
+- Do we need any database indexes? I would argue since this is just batch processing. 
+- Why do we have a rest api for this service? That would help only maintenance purposes.
+I wouldn't have a batch processing logic and public facing API share the same memory and CPU. If we are in a microservices environment,
+we should separate this service, rest api could help manual invoice fixes only, maybe. Invoice table should be populated with messaging.
+
+So; overall our architecture would look like this ⬇️
+
+![alt text](diagrams/propsed_plan.jpg)
