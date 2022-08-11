@@ -135,3 +135,6 @@ we should separate this service, rest api could help manual invoice fixes only, 
 So; overall our architecture would look like this ⬇️
 
 ![alt text](diagrams/propsed_plan.jpg)
+
+I maybe wasn't able to apply best practies regarding Kotlin and Gradle. I've been using Spring and Maven 
+for a while and need to sharpen my skills :)

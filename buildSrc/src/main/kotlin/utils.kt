@@ -36,3 +36,11 @@ fun Project.dataLibs() {
         "implementation"("org.xerial:sqlite-jdbc:3.30.1")
     }
 }
+
+fun Project.schedulerLibs(){
+    dependencies {
+        "implementation"("it.justwrote:kjob-core:0.2.0")
+        "implementation"( "it.justwrote:kjob-mongo:0.2.0") // for mongoDB persistence
+        "implementation"( "it.justwrote:kjob-inmem:0.2.0")
+    }
+}

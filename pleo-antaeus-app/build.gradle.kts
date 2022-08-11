@@ -7,6 +7,8 @@ kotlinProject()
 
 dataLibs()
 
+schedulerLibs()
+
 application {
     mainClassName = "io.pleo.antaeus.app.AntaeusApp"
 }
