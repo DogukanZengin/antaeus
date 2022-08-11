@@ -37,10 +37,22 @@ fun Project.dataLibs() {
     }
 }
 
+/**
+ * Configures scheduler libs for scheduling the invoice payment task
+ */
 fun Project.schedulerLibs(){
     dependencies {
         "implementation"("it.justwrote:kjob-core:0.2.0")
         "implementation"( "it.justwrote:kjob-mongo:0.2.0") // for mongoDB persistence
         "implementation"( "it.justwrote:kjob-inmem:0.2.0")
+    }
+}
+
+/**
+ * Configures async messaging related libs
+ */
+fun Project.messagingLibs(){
+    dependencies {
+        "implementation"("com.rabbitmq:amqp-client:5.9.0")
     }
 }

@@ -9,8 +9,10 @@ dataLibs()
 
 schedulerLibs()
 
+messagingLibs()
+
 application {
-    mainClassName = "io.pleo.antaeus.app.AntaeusApp"
+    mainClass.set("io.pleo.antaeus.app.AntaeusApp")
 }
 
 dependencies {
