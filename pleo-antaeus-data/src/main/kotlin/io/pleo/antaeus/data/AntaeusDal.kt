@@ -12,12 +12,9 @@ import io.pleo.antaeus.models.Customer
 import io.pleo.antaeus.models.Invoice
 import io.pleo.antaeus.models.InvoiceStatus
 import io.pleo.antaeus.models.Money
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-
+//TODO seperate table spesific logic to its own repository
 class AntaeusDal(private val db: Database) {
     fun fetchInvoice(id: Int): Invoice? {
         // transaction(db) runs the internal query as a new database transaction.
@@ -53,6 +50,17 @@ class AntaeusDal(private val db: Database) {
         return fetchInvoice(id)
     }
 
+    fun updateInvoice(modified: Invoice): Invoice {
+        transaction(db) {
+            InvoiceTable.update ( { InvoiceTable.id.eq(modified.id) } ){
+                it[this.value] = modified.amount.value
+                it[this.currency] = modified.amount.currency.toString()
+                it[this.status] = modified.status.toString()
+            }
+        }
+        return modified
+    }
+
     fun fetchCustomer(id: Int): Customer? {
         return transaction(db) {
             CustomerTable
@@ -80,4 +88,5 @@ class AntaeusDal(private val db: Database) {
 
         return fetchCustomer(id)
     }
+
 }
