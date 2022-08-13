@@ -1,4 +1,5 @@
 broker:
   queue: io.pleo.invoice.incoming
+  dlq: io.pleo.invoice.incoming.dlq
   exchange: invoice-message
   host: localhost

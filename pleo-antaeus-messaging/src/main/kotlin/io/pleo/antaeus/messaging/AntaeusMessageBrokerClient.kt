@@ -17,14 +17,16 @@ class AntaeusMessageBrokerClient(private val brokerConfiguration: BrokerConfigur
         val channel: Channel = connection.createChannel()
 
         channel.queueDeclare(brokerConfiguration.queue, false, false, false, null)
+        channel.queueDeclare(brokerConfiguration.dlq, false, false, false, null)
         channel.exchangeDeclare(brokerConfiguration.exchange, BuiltinExchangeType.DIRECT)
         channel.queueBind(brokerConfiguration.queue, brokerConfiguration.exchange, brokerConfiguration.queue)
+        channel.queueBind(brokerConfiguration.dlq, brokerConfiguration.exchange, brokerConfiguration.dlq)
     }
 }
 
 /**
- * - finish messaging logic
  * - finish scheduler logic - with leader message production and consume
- * - finish payment logic for single invoice
+ * - Finish DLQ setup
+ * - finish exception handling logic - network errors should end up in DLQ
  * - Tests
  */
