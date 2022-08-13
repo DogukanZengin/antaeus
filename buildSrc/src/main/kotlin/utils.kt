@@ -16,6 +16,8 @@ fun Project.kotlinProject() {
         // Logging
         "implementation"("org.slf4j:slf4j-simple:1.7.30")
         "implementation"("io.github.microutils:kotlin-logging:1.7.8")
+        "implementation"("com.sksamuel.hoplite:hoplite-core:2.5.2")
+        "implementation"("com.sksamuel.hoplite:hoplite-yaml:2.5.2")
 
         // Mockk
         "testImplementation"("io.mockk:mockk:1.9.3")

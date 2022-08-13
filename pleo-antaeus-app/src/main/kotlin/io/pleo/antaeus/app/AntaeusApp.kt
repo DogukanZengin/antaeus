@@ -7,6 +7,7 @@
 
 package io.pleo.antaeus.app
 
+import com.sksamuel.hoplite.ConfigLoader
 import getPaymentProvider
 import io.pleo.antaeus.core.services.BillingService
 import io.pleo.antaeus.core.services.CustomerService
@@ -14,6 +15,8 @@ import io.pleo.antaeus.core.services.InvoiceService
 import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.data.CustomerTable
 import io.pleo.antaeus.data.InvoiceTable
+import io.pleo.antaeus.messaging.AntaeusMessageBrokerClient
+import io.pleo.antaeus.models.config.BrokerConfiguration
 import io.pleo.antaeus.rest.AntaeusRest
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -68,4 +71,8 @@ fun main() {
         invoiceService = invoiceService,
         customerService = customerService
     ).run()
+
+    //Load External Configuration
+    val brokerConfig = ConfigLoader().loadConfigOrThrow<BrokerConfiguration>("/application.yaml")
+    val brokerClient = AntaeusMessageBrokerClient(brokerConfig)
 }

@@ -5,5 +5,5 @@ include(
     "pleo-antaeus-app",
     "pleo-antaeus-core",
     "pleo-antaeus-data",
-    "pleo-anteus-messaging"
+    "pleo-antaeus-messaging"
 )
