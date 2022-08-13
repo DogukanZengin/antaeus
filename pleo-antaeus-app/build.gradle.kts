@@ -7,8 +7,6 @@ kotlinProject()
 
 dataLibs()
 
-schedulerLibs()
-
 messagingLibs()
 
 application {

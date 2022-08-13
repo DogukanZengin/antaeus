@@ -25,7 +25,7 @@ fun Project.kotlinProject() {
         // JUnit 5
         "testImplementation"("org.junit.jupiter:junit-jupiter-api:$junitVersion")
         "testImplementation"("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-        "runtime"("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+        "runtimeOnly"("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     }
 }
 
@@ -34,19 +34,10 @@ fun Project.kotlinProject() {
  */
 fun Project.dataLibs() {
     dependencies {
-        "implementation"("org.jetbrains.exposed:exposed:0.17.7")
+        "implementation"("org.jetbrains.exposed:exposed-core:0.39.2")
+        "implementation"("org.jetbrains.exposed:exposed-dao:0.39.2")
+        "implementation"("org.jetbrains.exposed:exposed-jdbc:0.39.2")
         "implementation"("org.xerial:sqlite-jdbc:3.30.1")
-    }
-}
-
-/**
- * Configures scheduler libs for scheduling the invoice payment task
- */
-fun Project.schedulerLibs(){
-    dependencies {
-        "implementation"("it.justwrote:kjob-core:0.2.0")
-        "implementation"( "it.justwrote:kjob-mongo:0.2.0") // for mongoDB persistence
-        "implementation"( "it.justwrote:kjob-inmem:0.2.0")
     }
 }
 
