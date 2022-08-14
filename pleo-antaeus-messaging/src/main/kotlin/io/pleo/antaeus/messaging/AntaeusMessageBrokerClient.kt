@@ -33,7 +33,6 @@ class AntaeusMessageBrokerClient(brokerConfiguration: BrokerConfiguration) {
 }
 
 /**
- * - finish scheduler logic - with leader message production and consume
  * - finish exception handling logic - network errors should end up in DLQ
  * - Tests
  */

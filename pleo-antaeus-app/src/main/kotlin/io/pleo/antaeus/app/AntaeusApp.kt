@@ -37,7 +37,7 @@ fun main() {
     // The tables to create in the database.
     val tables = arrayOf(InvoiceTable, CustomerTable, ScheduledTasksTable)
 
-    val dbFile: File = File.createTempFile("antaeus-db", ".sqlite")
+    val dbFile = File.createTempFile("antaeus-db", ".sqlite")
     // Connect to the database and create the needed tables. Drop any existing data.
     val dataSource = SQLiteDataSource()
     dataSource.url = "jdbc:sqlite:${dbFile.absolutePath}"
@@ -78,7 +78,7 @@ fun main() {
     ).run()
 
     //Load External Configuration
-    val brokerConfig = ConfigLoader().loadConfigOrThrow<BrokerConfiguration>("/application.yaml")
+    val brokerConfig = ConfigLoader().loadConfigOrThrow<BrokerConfiguration>("/application.yml")
 
     //Init broker
     val brokerClient = AntaeusMessageBrokerClient(brokerConfig)
