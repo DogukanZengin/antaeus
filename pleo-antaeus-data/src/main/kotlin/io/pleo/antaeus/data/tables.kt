@@ -21,7 +21,7 @@ object CustomerTable : Table() {
     val currency = varchar("currency", 3)
     override val primaryKey = PrimaryKey(id, name = "PK_CustomerTable_Id")
 }
-
+// Table needed for the scheduler library, having a single source of tasks helps running in distributed env
 object ScheduledTasksTable: Table("scheduled_tasks"){
     val taskName = varchar("task_name",40)
     val taskInstance = varchar("task_instance",40)

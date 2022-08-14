@@ -11,7 +11,9 @@ import io.pleo.antaeus.messaging.ChargeInvoiceProducer
 import java.time.Instant
 import javax.sql.DataSource
 
-
+/**
+ * Main component for initalizing the scheduler and registering scheduled tasks
+ */
 class TaskScheduler(dataSource: DataSource, invoiceService: InvoiceService, chargeInvoiceProducer: ChargeInvoiceProducer) {
 
     init {

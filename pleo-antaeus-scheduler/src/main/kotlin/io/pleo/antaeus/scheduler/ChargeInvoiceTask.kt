@@ -7,6 +7,10 @@ import io.pleo.antaeus.models.InvoiceStatus
 import io.pleo.antaeus.models.PaginatedInvoiceList
 import io.pleo.antaeus.models.messaging.ChargeInvoiceMessage
 
+/**
+ * Task for running every beginning of month,
+ * It fetches the invoices paginated not to bloat the memory
+ */
 class ChargeInvoiceTask(private val chargeInvoiceProducer: ChargeInvoiceProducer,
                         private val invoiceService: InvoiceService) {
 

@@ -84,6 +84,7 @@ fun main() {
     val brokerClient = AntaeusMessageBrokerClient(brokerConfig)
     brokerClient.consumer = ChargeInvoiceConsumer(brokerClient.channel, billingService)
     brokerClient.producer = ChargeInvoiceProducer(brokerClient.channel, brokerConfig)
+    brokerClient.channel.basicConsume(brokerConfig.queue, false, brokerClient.consumer)
 
     //Init scheduler
     val taskScheduler = TaskScheduler(dataSource, invoiceService, brokerClient.producer)

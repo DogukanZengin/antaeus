@@ -9,8 +9,8 @@ package io.pleo.antaeus.data
 
 import io.pleo.antaeus.models.*
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+
 //TODO seperate table spesific logic to its own repository
 class AntaeusDal(private val db: Database) {
 
@@ -42,7 +42,7 @@ class AntaeusDal(private val db: Database) {
                     .orderBy(InvoiceTable.id)
                     .map { it.toInvoice() }
             }
-            val totalNumberOfRecords = query.count()
+            val totalNumberOfRecords = transaction(db) { query.count()}
             return PaginatedInvoiceList(result = invoices, hasMore = totalNumberOfRecords > offset + invoices.size)
         }
     }
