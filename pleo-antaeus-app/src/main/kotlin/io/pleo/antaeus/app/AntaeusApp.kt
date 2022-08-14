@@ -86,5 +86,5 @@ fun main() {
     brokerClient.producer = ChargeInvoiceProducer(brokerClient.channel, brokerConfig)
 
     //Init scheduler
-    val taskScheduler = TaskScheduler(dataSource)
+    val taskScheduler = TaskScheduler(dataSource, invoiceService, brokerClient.producer)
 }

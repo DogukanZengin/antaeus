@@ -5,11 +5,7 @@
 
 package io.pleo.antaeus.data
 
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.timestamp
 
 object InvoiceTable : Table() {
     val id = integer("id").autoIncrement()

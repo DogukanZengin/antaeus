@@ -7,15 +7,13 @@
 
 package io.pleo.antaeus.data
 
-import io.pleo.antaeus.models.Currency
-import io.pleo.antaeus.models.Customer
-import io.pleo.antaeus.models.Invoice
-import io.pleo.antaeus.models.InvoiceStatus
-import io.pleo.antaeus.models.Money
+import io.pleo.antaeus.models.*
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 //TODO seperate table spesific logic to its own repository
 class AntaeusDal(private val db: Database) {
+
     fun fetchInvoice(id: Int): Invoice? {
         // transaction(db) runs the internal query as a new database transaction.
         return transaction(db) {
@@ -30,8 +28,22 @@ class AntaeusDal(private val db: Database) {
     fun fetchInvoices(): List<Invoice> {
         return transaction(db) {
             InvoiceTable
-                .selectAll()
-                .map { it.toInvoice() }
+                    .selectAll()
+                    .map { it.toInvoice() }
+        }
+    }
+
+    fun fetchInvoicesPaginated(criteria: InvoicePaginationCriteria): PaginatedInvoiceList {
+        with(criteria) {
+            val query: Query = InvoiceTable.select { InvoiceTable.status eq criteria.status.toString() }
+            val invoices = transaction(db) {
+                query
+                    .limit(n = limit, offset = offset)
+                    .orderBy(InvoiceTable.id)
+                    .map { it.toInvoice() }
+            }
+            val totalNumberOfRecords = query.count()
+            return PaginatedInvoiceList(result = invoices, hasMore = totalNumberOfRecords > offset + invoices.size)
         }
     }
 

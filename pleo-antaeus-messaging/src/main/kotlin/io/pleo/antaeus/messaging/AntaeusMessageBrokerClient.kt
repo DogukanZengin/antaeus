@@ -34,5 +34,6 @@ class AntaeusMessageBrokerClient(brokerConfiguration: BrokerConfiguration) {
 
 /**
  * - finish exception handling logic - network errors should end up in DLQ
+ * - paginated search with unpaid invoices
  * - Tests
  */
