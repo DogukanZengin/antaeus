@@ -8,25 +8,32 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-class AntaeusMessageBrokerClient(private val brokerConfiguration: BrokerConfiguration) {
+class AntaeusMessageBrokerClient(brokerConfiguration: BrokerConfiguration) {
+
+    lateinit var producer: ChargeInvoiceProducer
+    lateinit var consumer: ChargeInvoiceConsumer
+    val channel: Channel
 
     init {
+        logger.info { "Initializing broker channel.." }
         val factory = ConnectionFactory()
         factory.host = brokerConfiguration.host
         val connection = factory.newConnection()
-        val channel: Channel = connection.createChannel()
+        channel = connection.createChannel()
+        val arguments = mapOf<String, Any>("x-dead-letter-exchange" to brokerConfiguration.dlq,
+                                           "x-dead-letter-routing-key" to brokerConfiguration.dlq)
 
-        channel.queueDeclare(brokerConfiguration.queue, false, false, false, null)
-        channel.queueDeclare(brokerConfiguration.dlq, false, false, false, null)
+        channel.queueDeclare(brokerConfiguration.queue, false, false, false, arguments)
+
         channel.exchangeDeclare(brokerConfiguration.exchange, BuiltinExchangeType.DIRECT)
+        channel.exchangeDeclare(brokerConfiguration.dlq, BuiltinExchangeType.DIRECT)
+
         channel.queueBind(brokerConfiguration.queue, brokerConfiguration.exchange, brokerConfiguration.queue)
-        channel.queueBind(brokerConfiguration.dlq, brokerConfiguration.exchange, brokerConfiguration.dlq)
     }
 }
 
 /**
  * - finish scheduler logic - with leader message production and consume
- * - Finish DLQ setup
  * - finish exception handling logic - network errors should end up in DLQ
- * - Tests
+ * - Tests   "x-dead-letter-exchange": "dlx_exchange", "x-dead-letter-routing-key": "dlx_key"
  */

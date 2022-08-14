@@ -16,6 +16,8 @@ import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.data.CustomerTable
 import io.pleo.antaeus.data.InvoiceTable
 import io.pleo.antaeus.messaging.AntaeusMessageBrokerClient
+import io.pleo.antaeus.messaging.ChargeInvoiceConsumer
+import io.pleo.antaeus.messaging.ChargeInvoiceProducer
 import io.pleo.antaeus.models.config.BrokerConfiguration
 import io.pleo.antaeus.rest.AntaeusRest
 import org.jetbrains.exposed.sql.Database
@@ -74,5 +76,10 @@ fun main() {
 
     //Load External Configuration
     val brokerConfig = ConfigLoader().loadConfigOrThrow<BrokerConfiguration>("/application.yaml")
+
+    //Init broker
     val brokerClient = AntaeusMessageBrokerClient(brokerConfig)
+    brokerClient.consumer = ChargeInvoiceConsumer(brokerClient.channel, billingService)
+    brokerClient.producer = ChargeInvoiceProducer(brokerClient.channel, brokerConfig)
+
 }

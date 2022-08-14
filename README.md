@@ -136,5 +136,9 @@ So; overall our architecture would look like this ⬇️
 
 ![alt text](diagrams/propsed_plan.jpg)
 
+### Further potential Improvements
+- A retry mechanism to the DLQ can be introduced
+
+
 I maybe wasn't able to apply best practies regarding Kotlin and Gradle. I've been using Spring and Maven 
 for a while and need to sharpen my skills :)
