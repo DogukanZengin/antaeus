@@ -127,6 +127,9 @@ to handle more than we need.
 - We need to have a scheduler setup and a leadership election system, in order to not have competing schedulers. 
 I need to look for a scheduler library that supports distributed environment for Kotlin, maybe.
 >Edit: Found this one -> https://github.com/justwrote/kjob - Lightweight and Supports multiple instances
+
+>Edit: For the scheduler I've decided to use sundial, a lightweight extraction of Quartz
+
 - Do we need any database indexes? I would argue since this is just batch processing. 
 - Why do we have a rest api for this service? That would help only maintenance purposes.
 I wouldn't have a batch processing logic and public facing API share the same memory and CPU. If we are in a microservices environment,

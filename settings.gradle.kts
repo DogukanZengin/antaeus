@@ -5,5 +5,6 @@ include(
     "pleo-antaeus-app",
     "pleo-antaeus-core",
     "pleo-antaeus-data",
-    "pleo-antaeus-messaging"
+    "pleo-antaeus-messaging",
+    "pleo-antaeus-scheduler"
 )

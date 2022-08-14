@@ -15,32 +15,35 @@ import io.pleo.antaeus.core.services.InvoiceService
 import io.pleo.antaeus.data.AntaeusDal
 import io.pleo.antaeus.data.CustomerTable
 import io.pleo.antaeus.data.InvoiceTable
+import io.pleo.antaeus.data.ScheduledTasksTable
 import io.pleo.antaeus.messaging.AntaeusMessageBrokerClient
 import io.pleo.antaeus.messaging.ChargeInvoiceConsumer
 import io.pleo.antaeus.messaging.ChargeInvoiceProducer
 import io.pleo.antaeus.models.config.BrokerConfiguration
 import io.pleo.antaeus.rest.AntaeusRest
+import io.pleo.antaeus.scheduler.TaskScheduler
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.sqlite.SQLiteDataSource
 import setupInitialData
 import java.io.File
 import java.sql.Connection
 
 fun main() {
     // The tables to create in the database.
-    val tables = arrayOf(InvoiceTable, CustomerTable)
+    val tables = arrayOf(InvoiceTable, CustomerTable, ScheduledTasksTable)
 
     val dbFile: File = File.createTempFile("antaeus-db", ".sqlite")
     // Connect to the database and create the needed tables. Drop any existing data.
+    val dataSource = SQLiteDataSource()
+    dataSource.url = "jdbc:sqlite:${dbFile.absolutePath}"
+
     val db = Database
-        .connect(url = "jdbc:sqlite:${dbFile.absolutePath}",
-            driver = "org.sqlite.JDBC",
-            user = "root",
-            password = "")
+        .connect(dataSource)
         .also {
             TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
             transaction(it) {
@@ -82,4 +85,6 @@ fun main() {
     brokerClient.consumer = ChargeInvoiceConsumer(brokerClient.channel, billingService)
     brokerClient.producer = ChargeInvoiceProducer(brokerClient.channel, brokerConfig)
 
+    //Init scheduler
+    val taskScheduler = TaskScheduler(dataSource)
 }
