@@ -91,6 +91,13 @@ Happy hacking 😁!
 
 ## Antaeus - Dogukan's Journey
 
+### TL;DR
+- Added a message broker client for processing invoices to have better retry and failure properties(RabbitMQ)
+- Added a lightweight scheduler library that is distributed environment friendly to prevent race conditions in case of scaling the service
+- Messages are produces in batches with database pagination so we don't have memory issues
+- Failed messages are sent to a dedicated DLQ to further investigation and processing.
+- I've spent about 6-7 hours for this distributed to a week
+
 ### Thought process
 
  It seems like an easy task, but actually there are lots of decisions to make when it comes to implementation. Normally, 
@@ -141,7 +148,9 @@ So; overall our architecture would look like this ⬇️
 
 ### Further potential Improvements
 - A retry mechanism to the DLQ can be introduced
+- When exception are thrown the customer can be notified via email,sms
 
+I maybe wasn't able to apply best practices regarding Kotlin and Gradle. I've been using Spring and Maven 
+for a while and need to sharpen my skills a bit:)
 
-I maybe wasn't able to apply best practies regarding Kotlin and Gradle. I've been using Spring and Maven 
-for a while and need to sharpen my skills :)
+Thanks!

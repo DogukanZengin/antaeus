@@ -1,9 +1,18 @@
 version: '3.8'
 
 services:
+  pleo-antaeus:
+    build:
+      context: .
+    ports:
+      - "7000:7000"
+    volumes:
+      - 'pleo-antaeus:/root/.gradle'
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
     ports:
       - "5672:5672"
       - "15672:15672"
+volumes:
+  pleo-antaeus:
