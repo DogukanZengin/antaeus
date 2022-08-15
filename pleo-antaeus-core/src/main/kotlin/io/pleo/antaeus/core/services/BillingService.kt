@@ -13,7 +13,7 @@ class BillingService(
 ) {
 
     fun charge(invoiceId: Int) {
-        logger.info { "Trying to charge customer with Invoice ID: $invoiceId" }
+        logger.info { "Trying charge on customer with Invoice ID: $invoiceId" }
         val invoice = invoiceService.fetch(invoiceId)
 
         val result = paymentProvider.charge(invoice)

@@ -12,30 +12,28 @@ import java.time.Instant
 import javax.sql.DataSource
 
 /**
- * Main component for initalizing the scheduler and registering scheduled tasks
+ * Main component for initializing the scheduler and registering scheduled tasks
  */
 class TaskScheduler(dataSource: DataSource, invoiceService: InvoiceService, chargeInvoiceProducer: ChargeInvoiceProducer) {
 
     init {
 
         //Run every month on the First day
-        val monthlyChargeInvoiceTask = Tasks.recurring("charge-invoices-task", Schedules.cron("0 0 0 1 * *"))
-                .execute { instance: TaskInstance<Void>, ctx: ExecutionContext ->
+        val monthlyChargeInvoiceTask = Tasks.recurring("charge-invoices-task", Schedules.cron("1 0 0 1 * *"))
+                .execute { _: TaskInstance<Void>, _: ExecutionContext ->
                     val task = ChargeInvoiceTask(chargeInvoiceProducer, invoiceService)
                     task.execute()
                 }
 
-
-
-        //Testing a one time runner to see the results
-        val oneTimerTestTask : OneTimeTask<Void> = Tasks.oneTime("one-timer-test-task")
-                .execute{ instance: TaskInstance<Void>, ctx: ExecutionContext ->
+        //Run for once
+        val oneTimeTask : OneTimeTask<Void> = Tasks.oneTime("one-timer-initial-task")
+                .execute{ _: TaskInstance<Void>, _: ExecutionContext ->
                     val task = ChargeInvoiceTask(chargeInvoiceProducer, invoiceService)
                     task.execute()
                 }
 
         val scheduler = Scheduler
-                .create(dataSource,oneTimerTestTask)
+                .create(dataSource,oneTimeTask)
                 .startTasks(monthlyChargeInvoiceTask)
                 .registerShutdownHook()
                 .jdbcCustomization(CustomJdbcCustomization())
@@ -43,6 +41,6 @@ class TaskScheduler(dataSource: DataSource, invoiceService: InvoiceService, char
                 .build();
 
         scheduler.start()
-        scheduler.schedule(oneTimerTestTask.instance("1"), Instant.now())
+        scheduler.schedule(oneTimeTask.instance("1"), Instant.now())
     }
 }

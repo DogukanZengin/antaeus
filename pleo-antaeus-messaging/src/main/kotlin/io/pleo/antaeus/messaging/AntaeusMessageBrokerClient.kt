@@ -31,9 +31,3 @@ class AntaeusMessageBrokerClient(brokerConfiguration: BrokerConfiguration) {
         channel.queueBind(brokerConfiguration.queue, brokerConfiguration.exchange, brokerConfiguration.queue)
     }
 }
-
-/**
- * - finish exception handling logic - network errors should end up in DLQ
- * - paginated search with unpaid invoices
- * - Tests
- */
